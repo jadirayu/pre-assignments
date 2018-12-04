@@ -1,0 +1,31 @@
+Bublar work test - Frontend
+============================================
+
+Time
+----------
+You have up to 7 days to code the game. 
+It's very important that you document how many hours you worked.
+
+
+Goal
+--------
+The goal is to create a Breakout game using Unity and C#. <https://en.wikipedia.org/wiki/Breakout_(video_game)>
+It's up to you how far you want to take the concept but the end result must include a paddle, bricks and a ball,
+the ball should bounce off the walls, ceiling, paddle and bricks. Basically the game should contain the core mechanics of Breakout.
+
+You will be judged on creativity as well, so feel free to add your own twists and ideas to the game.
+
+We will supply the art assets needed, but feel free to create your own art.
+
+When you're finished, zip your entire project and mail it to dev@bublar.com.
+
+At the end write a short note on what you think you could improve and what parts you think you did best and want us to look at.
+Swedish or English is fine.
+
+
+Other Breakout games
+--------------------
+These are som examples of Breakout games:
+Breakout - https://www.youtube.com/watch?v=MTnhlAlzb6Y
+DX Ball - https://www.youtube.com/watch?v=coqNqwFROoc
+Arkanoid - https://www.youtube.com/watch?v=CS5y9CEUl2g
