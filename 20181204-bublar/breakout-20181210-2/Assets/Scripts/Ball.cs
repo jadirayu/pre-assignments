@@ -4,6 +4,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour {
 
 	public float BallInitialVelocity = 600f;
+	public GameObject DeathParticle;
 
 	// Use this for initialization
 	void Awake () {
@@ -18,6 +19,8 @@ public class Ball : MonoBehaviour {
 			rb.isKinematic = false;
 			transform.parent = null;
 			rb.AddForce (new Vector3 (BallInitialVelocity, BallInitialVelocity, 0));
+			rb.useGravity = true;
+			Instantiate (DeathParticle, transform.position, Quaternion.identity);	
 		}
 	}
 

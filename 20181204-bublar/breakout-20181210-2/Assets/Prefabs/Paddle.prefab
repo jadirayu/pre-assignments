@@ -228,6 +228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BallInitialVelocity: 600
+  DeathParticle: {fileID: 1127773648071380, guid: b53dd0430c9f4184ba8152b6ec72508a,
+    type: 2}
 --- !u!135 &135031910972613418
 SphereCollider:
   m_ObjectHideFlags: 1

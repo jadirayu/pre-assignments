@@ -8,11 +8,10 @@ public class GM : MonoBehaviour {
 	public int LivesNr = 3;
 	public int BricksNr = 30;
 	public float ResetDelay = 1f;
-	public Text LivesText = null;
-	public GameObject GameOver = null;
-	public GameObject YouWon = null;
+	public Text LivesText;
+	public GameObject GameOver;
+	public GameObject YouWon;
 	public GameObject Paddle;
-	public GameObject DeathParticle;
 	public static GM Instance = null;
 	public GameObject BrickStonePrefab;
 	public GameObject BrickGoldPrefab;
@@ -36,14 +35,14 @@ public class GM : MonoBehaviour {
 	}
 
 	void SetupPaddle(){
-		clonePaddle = Instantiate (Paddle, transform.position, Quaternion.identity) as GameObject;
+		clonePaddle = Instantiate (Paddle, new Vector3 (0, -10f, 0), Quaternion.identity) as GameObject;
 	}
 
 	// TODO rewrite SetupBricks()
 	void SetupBricks(){
 		Instantiate (BrickStonePrefab, transform.position, Quaternion.identity);
-		Instantiate (BrickGoldPrefab, transform.position, Quaternion.identity);
-		Instantiate (BrickEmeraldPrefab, transform.position, Quaternion.identity);
+//		Instantiate (BrickGoldPrefab, transform.position, Quaternion.identity);
+//		Instantiate (BrickEmeraldPrefab, transform.position, Quaternion.identity);
 	}
 		
 	void Reset(){
@@ -58,8 +57,7 @@ public class GM : MonoBehaviour {
 
 	public void LoseLife(){
 		LivesNr--;
-//		LivesText.text = "Lives: " + LivesNr;
-		Instantiate (DeathParticle, clonePaddle.transform.position, Quaternion.identity);
+		LivesText.text = "Lives: " + LivesNr;
 		Destroy (clonePaddle);
 		Invoke ("SetupPaddle", ResetDelay);
 		CheckGameOver ();
