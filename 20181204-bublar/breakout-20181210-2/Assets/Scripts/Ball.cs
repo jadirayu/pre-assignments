@@ -25,7 +25,7 @@ public class Ball : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col){
 		if (col.gameObject.name == "Paddle(Clone)") {
-			rb.AddForce (new Vector3 (50f, 300f, 0));
+			rb.AddForce (new Vector3 (50f, 100f, 0));
 		}
 	}
 

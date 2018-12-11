@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class DifficultyLevel : MonoBehaviour {
 
+	// haven't implemented in GM scripts
 	public float BallSpeed{
 		get { return ballSpeed;}
-		private set{ ballSpeed = value;}	// TODO change public property BallInitialVelocity to private set in GM
+		private set{ ballSpeed = value;}
 	}
 	private float ballSpeed;
 
@@ -15,16 +16,23 @@ public class DifficultyLevel : MonoBehaviour {
 		z = GameObject.Find ("Ceiling").transform.position.z;
 	}
 
-	// refresh numbers of each kind of bricks and ballSpeed by the difficulty level
-	public void Refresh (int level, GameObject brickStonePrefab, GameObject brickGoldPrefab, GameObject brickEmeraldPrefab) {
+	/// <summary>
+	/// Refresh a new difficult level by generating corresponding bricks 
+	/// and optionally resetting ballSpeed (haven't implemented)
+	/// </summary>
+	/// <param name="levelNr">Level nr.</param>
+	/// <param name="brickStonePrefab">Brick stone prefab.</param>
+	/// <param name="brickGoldPrefab">Brick gold prefab.</param>
+	/// <param name="brickEmeraldPrefab">Brick emerald prefab.</param>
+	public void Refresh (int levelNr, GameObject brickStonePrefab, GameObject brickGoldPrefab, GameObject brickEmeraldPrefab) {
 		brickStone = brickStonePrefab;
 		brickGold = brickGoldPrefab;
 		brickEmerald = brickEmeraldPrefab;
 
-		if (level == 1) {
+		if (levelNr == 1) {
 			GenerateBricks (2, 2);
 			ballSpeed = 400f;
-		} else if (level == 2) {
+		} else if (levelNr == 2) {
 			GenerateBricks (5, 3);
 			ballSpeed = 500f;
 		}
@@ -32,7 +40,12 @@ public class DifficultyLevel : MonoBehaviour {
 			Debug.Log ("Uncorrect difficulty level");
 		}
 	}
-		
+
+	/// <summary>
+	/// Instantiate and autolayout the bricks by # of BrickGold and BrickEmerald
+	/// </summary>
+	/// <param name="brickGoldNr">Brick gold nr.</param>
+	/// <param name="brickEmeraldNr">Brick emerald nr.</param>
 	void GenerateBricks (int brickGoldNr, int brickEmeraldNr){
 		// randomize BrickGold and BrickEmerald position (row, column) by a Knuth Shuffle
 		for (int i = 0; i < 6; i++){
@@ -65,6 +78,12 @@ public class DifficultyLevel : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Gets the position of brick by itsrow and column.
+	/// </summary>
+	/// <returns>The position brick.</returns>
+	/// <param name="row">Row.</param>
+	/// <param name="column">Column.</param>
 	Vector3 GetPosBrick(int row, int column){
 		Vector3 posBrick = new Vector3 ((column - 2) * 2.2f, posUpLimit + (row) * 1.2f, z);
 		return posBrick;

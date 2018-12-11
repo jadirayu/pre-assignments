@@ -13,7 +13,7 @@ public class Paddle : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		float paddlePosX = transform.position.x + (Input.GetAxis ("Horizontal") * PaddleSpeed);
-		paddlePos = new Vector3 (Mathf.Clamp (paddlePosX, wallLeft.transform.position.x + 2f, wallRight.transform.position.x - 2f), -10f, 0);	//TODO scale wall according to screen size
+		paddlePos = new Vector3 (Mathf.Clamp (paddlePosX, wallLeft.transform.position.x + 2f, wallRight.transform.position.x - 2f), -10f, 0);
 		transform.position = paddlePos;
 
 	}

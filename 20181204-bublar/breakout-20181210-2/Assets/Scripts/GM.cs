@@ -29,6 +29,10 @@ public class GM : MonoBehaviour {
 		Setup ();
 	}
 
+	/// <summary>
+	/// Instantiate bricks by the difficulty level
+	/// and instantiate the paddle and ball
+	/// </summary>
 	public void Setup(){
 		DifficultyLevel levelSetting = new DifficultyLevel ();
 		levelSetting.Refresh (1, BrickStonePrefab, BrickGoldPrefab, BrickEmeraldPrefab);
@@ -48,7 +52,7 @@ public class GM : MonoBehaviour {
 		BricksNr--;
 		CheckGameOver ();
 	}
-
+		
 	public void LoseLife(){
 		LivesNr--;
 		LivesText.text = "Lives: " + LivesNr;
@@ -57,12 +61,17 @@ public class GM : MonoBehaviour {
 		CheckGameOver ();
 	}
 
+	/// <summary>
+	/// could have implemented more difficulty levels here
+	/// </summary>
 	public void CheckGameOver(){
 		if (BricksNr < 1) {
 			YouWon.SetActive (true);
 			Time.timeScale = .25f;
 			Invoke ("Reset", ResetDelay);
 		}
+		//TODO could go to a more difficult level by calling 
+		// levelSetting.Refresh (levelNr, BrickStonePrefab, BrickGoldPrefab, BrickEmeraldPrefab);
 
 		if (LivesNr < 1) {
 			GameOver.SetActive (true);
