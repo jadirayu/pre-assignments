@@ -3,38 +3,77 @@ using UnityEngine;
 
 public class DifficultyLevel : MonoBehaviour {
 
-	public GameObject BrickStone;
-	public GameObject BrickGold;
-	public GameObject BrickEmerald;
-
 	public float BallSpeed{
 		get { return ballSpeed;}
-		set{ ballSpeed = value;}
+		private set{ ballSpeed = value;}	// TODO change public property BallInitialVelocity to private set in GM
 	}
 	private float ballSpeed;
 
-	// regenerate bricks
-	public void RefreshDifficultyLevel () {
-		if (Level == 1) {
-			BricksAutoLayout (3, 2);
-			ballSpeed = 450f;
-		} else if (Level == 2) {
-			BricksAutoLayout (5, 3);
+	void Awake(){
+		posUpLimit = GameObject.Find ("Ceiling").transform.position.y - 2f;
+	}
+
+	// refresh numbers of each kind of bricks and ballSpeed by the difficulty level
+	public void Refresh (int level, GameObject brickStonePrefab, GameObject brickGoldPrefab, GameObject brickEmeraldPrefab) {
+		brickStone = brickStonePrefab;
+		brickGold = brickGoldPrefab;
+		brickEmerald = brickEmeraldPrefab;
+
+		if (level == 1) {
+			GenerateBricks (2, 2);
+			ballSpeed = 400f;
+		} else if (level == 2) {
+			GenerateBricks (5, 3);
 			ballSpeed = 500f;
-		} else if (Level == 3) {
-			BricksAutoLayout (8, 5);
-			ballSpeed = 600f;
-		} else {
+		}
+		else {
 			Debug.Log ("Uncorrect difficulty level");
 		}
 	}
+		
+	void GenerateBricks (int brickGoldNr, int brickEmeraldNr){
+		// randomize BrickGold and BrickEmerald position (row, column) by a Knuth Shuffle
+		for (int i = 0; i < 6; i++){
+			int j = Random.Range (0, i + 1);
+			deckRow [i] = deckRow [j];
+			deckRow [j] = i;
+		}
+		for (int i = 0; i < 5; i++){
+			int j = Random.Range (0, i + 1);
+			deckColumn [i] = deckColumn [j];
+			deckColumn [j] = i;
+		}
 
-	// randomize bricks layout by difficulty level
-	void BricksAutoLayout(int brickGoldNr, int brickEmeraldNr){
-		// TODO: generate multiple random numbers
+		// instantiate bricks to their randomized positions
+		for (int r = 0; r < 6; r++){
+			for (int c = 0; c < 5; c++) {
+				Vector3 posBrick = GetPosBrick (r, c);
+				if (deckRow [r] == 0) {
+					if (deckColumn [c] < brickGoldNr) {
+						Instantiate (brickGold, posBrick, Quaternion.identity);
+					} else if (deckColumn [c] < brickGoldNr + brickEmeraldNr) {
+						Instantiate (brickEmerald, posBrick, Quaternion.identity);
+					} else {
+						Instantiate (brickStone, posBrick, Quaternion.identity);
+					}
+				} else {
+					Instantiate (brickStone, posBrick, Quaternion.identity);
+				}
+			}
+		}
 	}
 
-	private int Level = 1;
+	Vector3 GetPosBrick(int row, int column){
+		Vector3 posBrick = new Vector3 ((column - 3) * 2.2f, posUpLimit - (row + 1) * 1.2f, 0);
+		return posBrick;
+	}
+
+	private GameObject brickStone;
+	private GameObject brickGold;
+	private GameObject brickEmerald;
 	private int brickGoldNr;
 	private int brickEmeraldNr;
+	private float posUpLimit;
+	private int[] deckRow = new int[6];
+	private int[] deckColumn = new int[5];
 }

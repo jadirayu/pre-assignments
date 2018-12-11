@@ -30,21 +30,15 @@ public class GM : MonoBehaviour {
 	}
 
 	public void Setup(){
+		DifficultyLevel levelSetting = new DifficultyLevel ();
+		levelSetting.Refresh (1, BrickStonePrefab, BrickGoldPrefab, BrickEmeraldPrefab);
 		SetupPaddle ();
-		SetupBricks ();
 	}
 
 	void SetupPaddle(){
 		clonePaddle = Instantiate (Paddle, new Vector3 (0, -10f, 0), Quaternion.identity) as GameObject;
 	}
-
-	// TODO rewrite SetupBricks()
-	void SetupBricks(){
-		Instantiate (BrickStonePrefab, transform.position, Quaternion.identity);
-//		Instantiate (BrickGoldPrefab, transform.position, Quaternion.identity);
-//		Instantiate (BrickEmeraldPrefab, transform.position, Quaternion.identity);
-	}
-		
+				
 	void Reset(){
 		Time.timeScale = 1f;
 		SceneManager.LoadScene (SceneManager.GetActiveScene().name);
