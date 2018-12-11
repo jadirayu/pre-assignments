@@ -13,14 +13,19 @@ public class Ball : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		// TODO modify Fire1 keyword to trigger ball movement
-		if (Input.GetButtonDown ("Fire1") && !ballInPlay) {
+		// TODO use something else triggering ball movement
+		if (Input.GetKeyDown ("space") && !ballInPlay) {
 			ballInPlay = !ballInPlay;
 			rb.isKinematic = false;
 			transform.parent = null;
-			rb.AddForce (new Vector3 (BallInitialVelocity, BallInitialVelocity, 0));
-			rb.useGravity = true;
+			rb.AddForce (new Vector3 (BallInitialVelocity, BallInitialVelocity * 2f, 0));
 			Instantiate (DeathParticle, transform.position, Quaternion.identity);	
+		}
+	}
+
+	void OnCollisionEnter(Collision col){
+		if (col.gameObject.name == "Paddle(Clone)") {
+			rb.AddForce (new Vector3 (50f, 300f, 0));
 		}
 	}
 

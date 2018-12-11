@@ -10,7 +10,9 @@ public class DifficultyLevel : MonoBehaviour {
 	private float ballSpeed;
 
 	void Awake(){
-		posUpLimit = GameObject.Find ("Ceiling").transform.position.y - 2f;
+		posUpLimit = GameObject.Find ("Ceiling").transform.position.y - 1f;
+		print ("Upper limit: " + posUpLimit);
+		z = GameObject.Find ("Ceiling").transform.position.z;
 	}
 
 	// refresh numbers of each kind of bricks and ballSpeed by the difficulty level
@@ -64,7 +66,7 @@ public class DifficultyLevel : MonoBehaviour {
 	}
 
 	Vector3 GetPosBrick(int row, int column){
-		Vector3 posBrick = new Vector3 ((column - 3) * 2.2f, posUpLimit - (row + 1) * 1.2f, 0);
+		Vector3 posBrick = new Vector3 ((column - 2) * 2.2f, posUpLimit + (row) * 1.2f, z);
 		return posBrick;
 	}
 
@@ -74,6 +76,7 @@ public class DifficultyLevel : MonoBehaviour {
 	private int brickGoldNr;
 	private int brickEmeraldNr;
 	private float posUpLimit;
+	private float z;
 	private int[] deckRow = new int[6];
 	private int[] deckColumn = new int[5];
 }
