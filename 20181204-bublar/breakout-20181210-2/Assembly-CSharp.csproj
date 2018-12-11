@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\BrickGold.cs" />
      <Compile Include="Assets\Scripts\BrickStone.cs" />
      <Compile Include="Assets\Scripts\DeadZone.cs" />
+     <Compile Include="Assets\Scripts\DifficultyLevel.cs" />
      <Compile Include="Assets\Scripts\GM.cs" />
      <Compile Include="Assets\Scripts\Paddle.cs" />
  <Reference Include="UnityEditor.StandardEvents">
