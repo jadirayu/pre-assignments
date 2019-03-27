@@ -3,10 +3,11 @@
 public class Hole : MonoBehaviour
 {
     public float[] Position { get; private set; }
-    //public bool IsDisplayed { get; set; }
+    public bool IsDeletable { get; private set; }
 
     public Hole(bool isDeletable, int nr = -1)
     {
+        this.IsDeletable = IsDeletable;
         if (isDeletable)
         {
             this.Position = GetRandomPosition();
