@@ -24,4 +24,3 @@ public class MainScreen : MonoBehaviour
         Application.LoadLevel("ProfessionalScreen");
     }
 }
-s
