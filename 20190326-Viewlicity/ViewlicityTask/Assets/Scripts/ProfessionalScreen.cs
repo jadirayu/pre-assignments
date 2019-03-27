@@ -71,7 +71,7 @@ public class ProfessionalScreen : MonoBehaviour
             Destroy(this.holeInstances[index]);
         }
         else {
-            EditorUtility.DisplayDialog("Oops", "This is one of the first three holes which are undeletable. Try another hole!", "OK", "Cancel");
+            EditorUtility.DisplayDialog("Oops!", "This is one of the first three holes which are undeletable. Try another hole :)", "OK", "Cancel");
         }
         
     }
