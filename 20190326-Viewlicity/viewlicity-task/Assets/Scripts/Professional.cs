@@ -9,23 +9,14 @@ public class Professional : MonoBehaviour
     public Dropdown DpdnHoles;
     public GameObject PrefabHole;
     public Canvas Canvas;
+    public Camera Camera;
 
     private void Awake() {
         this.BtnBack.onClick.AddListener(GoBack);
-        Init3Holes();
-        this.DpdnHoles.onValueChanged.AddListener(delegate { DpdnValueChanged(this.DpdnHoles); });
-    }
-
-    /// <summary>
-    /// Initialize the first three holes in given positions
-    /// </summary>
-    private void Init3Holes() {
         this.holes = new List<Hole>();
         this.holeInstances = new List<GameObject>();
-        for (int i = 0; i < 3; i++) {
-            AddHole(false, i);
-        }
         RefreshDropdown();
+        this.DpdnHoles.onValueChanged.AddListener(delegate { DpdnValueChanged(this.DpdnHoles); });
     }
 
     private void DpdnValueChanged(Dropdown dpdnHoles) {
@@ -45,19 +36,17 @@ public class Professional : MonoBehaviour
     /// </summary>
     /// <param name="isDeletable">is one of the first three holes</param>
     /// <param name="nr">the number of the hole</param>
-    private void AddHole(bool isDeletable, int nr = -1) {
-        Hole newHole = new Hole(isDeletable, nr);
+    private void AddHole(bool isDeletable) {
+        Hole newHole = new Hole(Screen.width, Screen.height, isDeletable);
         this.holes.Add(newHole);
         RefreshDropdown();
 
         if (isDeletable) {
-            GameObject holeInstance = (GameObject)Instantiate(PrefabHole, new Vector3(this.Canvas.transform.position.x + newHole.Position[0],
-            this.Canvas.transform.position.y + newHole.Position[1], 0), Quaternion.identity);
+            Vector3 vec3 = this.Camera.ScreenToWorldPoint(new Vector3( newHole.Position[0], newHole.Position[1], 0.5f));
+            GameObject holeInstance = (GameObject)Instantiate(PrefabHole, vec3, Quaternion.identity);
             holeInstance.transform.SetParent(this.Canvas.transform);
             this.holeInstances.Add(holeInstance);
         }
-        
-        //Debug.Log("x: " + newHole.Position[0]  + " y: " + newHole.Position[1]);
     }
 
     /// <summary>
