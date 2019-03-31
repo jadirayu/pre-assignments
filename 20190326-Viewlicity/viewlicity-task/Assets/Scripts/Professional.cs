@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,11 +13,18 @@ public class Professional : MonoBehaviour
     public Camera Camera;
 
     private void Awake() {
-        this.BtnBack.onClick.AddListener(GoBack);
+        InitHoles();
+        this.DpdnHoles.onValueChanged.AddListener(delegate { DpdnValueChanged(this.DpdnHoles); });
+        this.BtnBack.onClick.AddListener(GoBack);   
+    }
+
+    private void InitHoles() {
         this.holes = new List<Hole>();
         this.holeInstances = new List<GameObject>();
-        RefreshDropdown();
-        this.DpdnHoles.onValueChanged.AddListener(delegate { DpdnValueChanged(this.DpdnHoles); });
+        for (int i = 0; i < 3; i++) {
+            AddHole(false, i);
+        }
+        RefreshScreen();
     }
 
     private void DpdnValueChanged(Dropdown dpdnHoles) {
@@ -30,19 +38,20 @@ public class Professional : MonoBehaviour
     }
 
     /// <summary>
-    /// Add a hole 
-    /// in a given position if it's one of the first three holes
-    /// in a random position otherwise
+    /// Instantiate a Hole prefab
+    /// 1) in an invisible position if it's one of the first three holes,
+    /// or 2) in a random position otherwise;
+    /// and refresh the dropdown menu
     /// </summary>
     /// <param name="isDeletable">is one of the first three holes</param>
     /// <param name="nr">the number of the hole</param>
-    private void AddHole(bool isDeletable) {
-        Hole newHole = new Hole(Screen.width, Screen.height, isDeletable);
-        this.holes.Add(newHole);
-        RefreshDropdown();
+    private void AddHole(bool isDeletable, int nr = -1) {
+        Hole newHole = new Hole(Screen.width, Screen.height, isDeletable, nr);
+        if (newHole.Position[0] != Single.NaN) {
+            this.holes.Add(newHole);
+            RefreshScreen();
 
-        if (isDeletable) {
-            Vector3 vec3 = this.Camera.ScreenToWorldPoint(new Vector3( newHole.Position[0], newHole.Position[1], 0.5f));
+            Vector3 vec3 = this.Camera.ScreenToWorldPoint(new Vector3(newHole.Position[0], newHole.Position[1], 0.5f));
             GameObject holeInstance = (GameObject)Instantiate(PrefabHole, vec3, Quaternion.identity);
             holeInstance.transform.SetParent(this.Canvas.transform);
             this.holeInstances.Add(holeInstance);
@@ -57,7 +66,7 @@ public class Professional : MonoBehaviour
         if (this.holes[index].IsDeletable)
         {
             this.holes.RemoveAt(index);
-            RefreshDropdown();
+            RefreshScreen();
             Destroy(this.holeInstances[index]);
         }
         else {
@@ -66,7 +75,10 @@ public class Professional : MonoBehaviour
     }
 
 
-    private void RefreshDropdown() {
+    /// <summary>
+    /// Refresh dropdown menu, holes & their numbers on screen
+    /// </summary>
+    private void RefreshScreen() {
         this.DpdnHoles.options.Clear();
         for (int i = 0; i < this.holes.Count; i++) {
             this.DpdnHoles.options.Add(new Dropdown.OptionData("Hole: " + (i + 1)));
