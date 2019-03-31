@@ -11,16 +11,19 @@ public class Professional : MonoBehaviour
     public GameObject PrefabHole;
     public Canvas Canvas;
     public Camera Camera;
+    public Button BtnReset;
 
     private void Awake() {
         InitHoles();
         this.DpdnHoles.onValueChanged.AddListener(delegate { DpdnValueChanged(this.DpdnHoles); });
-        this.BtnBack.onClick.AddListener(GoBack);   
+        this.BtnBack.onClick.AddListener(GoBack);
+        this.BtnReset.onClick.AddListener(OnReset);
     }
 
     private void InitHoles() {
         this.holes = new List<Hole>();
         this.holeInstances = new List<GameObject>();
+        this.textObjs = new List<GameObject>();
         for (int i = 0; i < 3; i++) {
             AddHole(false, i);
         }
@@ -38,9 +41,9 @@ public class Professional : MonoBehaviour
     }
 
     /// <summary>
-    /// Instantiate a Hole prefab
-    /// 1) in an invisible position if it's one of the first three holes,
-    /// or 2) in a random position otherwise;
+    /// Add a hole in this.Holes with a position that is
+    /// 1) invisible if it's one of the first three holes,
+    /// or 2) random otherwise;
     /// and refresh the dropdown menu
     /// </summary>
     /// <param name="isDeletable">is one of the first three holes</param>
@@ -50,16 +53,11 @@ public class Professional : MonoBehaviour
         if (newHole.Position[0] != Single.NaN) {
             this.holes.Add(newHole);
             RefreshScreen();
-
-            Vector3 vec3 = this.Camera.ScreenToWorldPoint(new Vector3(newHole.Position[0], newHole.Position[1], 0.5f));
-            GameObject holeInstance = (GameObject)Instantiate(PrefabHole, vec3, Quaternion.identity);
-            holeInstance.transform.SetParent(this.Canvas.transform);
-            this.holeInstances.Add(holeInstance);
         }
     }
 
     /// <summary>
-    /// Delete a hole
+    /// Delete a hole from this.Hole
     /// </summary>
     /// <param name="index">index of the selected hole from the dropdown menu</param>
     private void DeleteHole(int index) {
@@ -67,7 +65,6 @@ public class Professional : MonoBehaviour
         {
             this.holes.RemoveAt(index);
             RefreshScreen();
-            Destroy(this.holeInstances[index]);
         }
         else {
             EditorUtility.DisplayDialog("Oops", "This is one of the first three holes which are undeletable. Try another hole!", "OK", "Cancel");
@@ -76,21 +73,66 @@ public class Professional : MonoBehaviour
 
 
     /// <summary>
-    /// Refresh dropdown menu, holes & their numbers on screen
+    /// Refresh dropdown menu
+    /// Add/delete holes on screen
     /// </summary>
     private void RefreshScreen() {
         this.DpdnHoles.options.Clear();
+        foreach (GameObject holeInstance in this.holeInstances)
+            Destroy(holeInstance);
+        this.holeInstances.Clear();
+        this.textObjs.Clear();
+
         for (int i = 0; i < this.holes.Count; i++) {
             this.DpdnHoles.options.Add(new Dropdown.OptionData("Hole: " + (i + 1)));
+
+            Vector3 vec3 = new Vector3();
+            if (i < 3)
+            {
+                vec3 = this.Camera.ScreenToWorldPoint(new Vector3(this.holes[i].Position[0], this.holes[i].Position[1], -1000f));
+            }
+            else {
+                vec3 = this.Camera.ScreenToWorldPoint(new Vector3(this.holes[i].Position[0], this.holes[i].Position[1], 0.5f));
+            }
+            GameObject holeInstance = (GameObject)Instantiate(PrefabHole, vec3, Quaternion.identity);
+            holeInstance.transform.SetParent(this.Canvas.transform);
+            this.holeInstances.Add(holeInstance);
+
+            this.textObjs.Add(new GameObject());
+            Text textObj = this.textObjs[this.textObjs.Count - 1].AddComponent<Text>();
+            textObj.text = i.ToString();
+            textObj.fontSize = 15;
+            textObj.color = Color.white;
+            textObj.horizontalOverflow = HorizontalWrapMode.Overflow;
+            textObj.verticalOverflow = VerticalWrapMode.Overflow;
+            textObj.transform.SetParent(this.Canvas.transform);
+            textObj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            textObj.transform.position = this.Camera.ScreenToWorldPoint(new Vector3(this.holes[i].Position[0], this.holes[i].Position[1], 0.5f));
         }
+
         this.DpdnHoles.options.Add(new Dropdown.OptionData("Add New"));
         this.DpdnHoles.RefreshShownValue();
+
+        Debug.Log("holes: " + this.holes.Count + " | instance: " + this.holeInstances.Count + " | text: " + this.textObjs.Count);
+
     }
 
     private void GoBack() {
         Application.LoadLevel("Main");
     }
 
+    private void OnReset()
+    {
+        this.holes.Clear();
+        for (int i = 0; i < 3; i++)
+        {
+            AddHole(false, i);
+        }
+        RefreshScreen();
+        Debug.Log("reset");
+    }
+
     private List<Hole> holes;
     private List<GameObject> holeInstances;
+    private List<GameObject> textObjs;
 }
